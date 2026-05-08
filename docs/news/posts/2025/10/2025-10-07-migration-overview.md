@@ -94,7 +94,7 @@ To effectively manage growing storage needs while controlling the costs associat
 ### What GPFS Tiering IS NOT
 
 1. **Tiering is NOT a replacement for LTS**.
-    1. Data you know you will not use for an extended period of time should be moved to [LTS](../../data_management/storage/lts/index.md).
+    1. Data you know you will not use for an extended period of time should be moved to [LTS](../../../../data_management/storage/lts/index.md).
     1. Storage quotas will be enforced regardless of a given file's storage tier. This means for a standard project quota, only 25 TiB can be stored in a project across both GPFS and Ceph.
 1. **Tiering is NOT a backup**
     1. A file's data will only exist on one tier, CephFS or GPFS, **never on both**.
@@ -109,7 +109,7 @@ To effectively manage growing storage needs while controlling the costs associat
 <!-- markdownlint-disable MD046 -->
 !!! critical
 
-    It is imperative to understand that tiered storage does not equal a backup. We do not provide a traditional, automatic backup for data stored on Cheaha. All data are erasure-encoded in case of hardware failure, they are not backed up in case of user error. Please see information about [LTS](../../data_management/storage/lts/index.md) for a potential backup solution.
+    It is imperative to understand that tiered storage does not equal a backup. We do not provide a traditional, automatic backup for data stored on Cheaha. All data are erasure-encoded in case of hardware failure, they are not backed up in case of user error. Please see information about [LTS](../../../../data_management/storage/lts/index.md) for a potential backup solution.
 <!-- markdownlint-enable MD046 -->
 
 ### What CephFS IS
@@ -139,7 +139,7 @@ After migration to GPFS 5, loading a given file may take longer than expected du
 
 Please be patient when starting an app such as Jupyter Notebook or reading an especially large file for the first time post-migration due to the delay caused by initial file reads.
 
-For workflows operating on existing, large files (i.e. >= 10 GiB) after migration, please [contact support](../../index.md#how-to-contact-us) for potential optimizations. This can include pre-migrating data to GPFS prior to starting these workflows.
+For workflows operating on existing, large files (i.e. >= 10 GiB) after migration, please [contact support](../../../../index.md#how-to-contact-us) for potential optimizations. This can include pre-migrating data to GPFS prior to starting these workflows.
 
 ### Jobs Requeued Prior to Migration
 
@@ -153,19 +153,19 @@ Compute nodes are only able to run jobs from one of GPFS 4 or GPFS 5 so compute 
 
 **Current GPFS 5 Compute Capacity Pre-Migration**:
 
-| Partition | Available Nodes | Notes |
-|---|---|---|
-| mainline | 20 (2560 cores) | Include AMD CPUs. See the [list of changes](#changes-to-mainline-partitions) for details |
-| pascalnodes | 0 | All pascalnodes will be moved during the 1st compute migration |
-| amperenodes | 5 (10 A100s) | 10 amperenodes will be added during the 1st compute migration with the remaining 5 added once the migration completes |
-| amperenodes-medium | 1 (2 A100s) | Nodes will be added to the amperenodes-medium partition during both compute migrations |
-| largemem | 0 | largemem and largmem-long nodes will remain on GPFS 4 until the full migration completes. If you require access to the 1.5 TiB RAM nodes, contact support |
+| Partition          | Available Nodes | Notes                                                                                                                                                     |
+|--------------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| mainline           | 20 (2560 cores) | Include AMD CPUs. See the [list of changes](#changes-to-mainline-partitions) for details                                                                  |
+| pascalnodes        | 0               | All pascalnodes will be moved during the 1st compute migration                                                                                            |
+| amperenodes        | 5 (10 A100s)    | 10 amperenodes will be added during the 1st compute migration with the remaining 5 added once the migration completes                                     |
+| amperenodes-medium | 1 (2 A100s)     | Nodes will be added to the amperenodes-medium partition during both compute migrations                                                                    |
+| largemem           | 0               | largemem and largmem-long nodes will remain on GPFS 4 until the full migration completes. If you require access to the 1.5 TiB RAM nodes, contact support |
 
 #### Changes to Mainline Partitions
 
 On GPFS 4, all nodes in the interactive/express/short/medium/long (mainline) partitions have Intel processors while the `amd-hdr100` nodes have AMD processors. On GPFS 5, the mainline partitions use nodes that were previously migrated from the `amd-hdr100` partition and so now use AMD CPUs.
 
-In rare cases, tools compiled on on Intel processor can cause `Illegal Instruction` errors when run on AMD CPUs. If your jobs were submitted to one of the mainline partitions and show this error after migration, please [contact support](../../index.md#how-to-contact-us). As the migration continues, the standard Intel nodes will also be migrated from GPFS 4 to GPFS 5 and added to the mainline partitions.
+In rare cases, tools compiled on on Intel processor can cause `Illegal Instruction` errors when run on AMD CPUs. If your jobs were submitted to one of the mainline partitions and show this error after migration, please [contact support](../../../../index.md#how-to-contact-us). As the migration continues, the standard Intel nodes will also be migrated from GPFS 4 to GPFS 5 and added to the mainline partitions.
 
 **Update**: To help mitigate these issues, we are introducing `amd` and `intel` constraint values for all of our nodes after the initial compute migration. Specifying one of these when submitting jobs to heterogeneous partitions will keep the job from running on a node with incompatible hardware. To use these constraints, specify the `constraint` field when submitting your job.
 
@@ -190,17 +190,17 @@ To best accomodate workload for both migrated and not-yet-migrated users, comput
 
 **50% Migration Completion**:
 
-| Partition | GPFS 4 Nodes | GPFS 5 Nodes | Notes |
-|---|---|---|---|
-| mainline | 25 | 68 | GPFS 4 mainline partitions will use the remaining largemem and amd-hdr100 nodes. Mixed Intel and AMD hardware on both GPFS 4 and GPFS 5 |
-| pascalnodes | 0 | 17 |  |
-| pascalnodes-medium | 0 | 8 |  |
-| amperenodes | 5 (10 A100s) | 15 (30 A100s) |  |
-| amperenodes-medium | 1 (2 A100s) | 7 (14 A100s) |  |
-| largemem | 13 | 0 | Shared with mainline partitions |
-| largemem-long | 5 | 0 | Shared with mainline partitions |
-| amd-hdr100 | 12 | 20 | Shared with mainline partitions |
-| intel-dcb | 9 | 0 |  |
+| Partition          | GPFS 4 Nodes | GPFS 5 Nodes  | Notes                                                                                                                                   |
+|--------------------|--------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| mainline           | 25           | 68            | GPFS 4 mainline partitions will use the remaining largemem and amd-hdr100 nodes. Mixed Intel and AMD hardware on both GPFS 4 and GPFS 5 |
+| pascalnodes        | 0            | 17            |                                                                                                                                         |
+| pascalnodes-medium | 0            | 8             |                                                                                                                                         |
+| amperenodes        | 5 (10 A100s) | 15 (30 A100s) |                                                                                                                                         |
+| amperenodes-medium | 1 (2 A100s)  | 7 (14 A100s)  |                                                                                                                                         |
+| largemem           | 13           | 0             | Shared with mainline partitions                                                                                                         |
+| largemem-long      | 5            | 0             | Shared with mainline partitions                                                                                                         |
+| amd-hdr100         | 12           | 20            | Shared with mainline partitions                                                                                                         |
+| intel-dcb          | 9            | 0             |                                                                                                                                         |
 
 #### Effects on Queue Times
 
